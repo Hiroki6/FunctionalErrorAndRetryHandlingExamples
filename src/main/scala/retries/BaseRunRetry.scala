@@ -32,7 +32,7 @@ object BaseRunRetry {
   }
 
   def main(args: Array[String]): Unit = {
-    import Common.{sampleInput, printOutput}
+    import Common.{ sampleInput, printOutput }
     printOutput(program(sampleInput))
   }
 }

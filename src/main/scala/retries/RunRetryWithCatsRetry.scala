@@ -46,14 +46,14 @@ object RunRetryWithCatsRetry {
   }
 
   val retry5times100millis = limitRetries[IO](5) |+| constantDelay[IO](100.millis)
-  val retry10times1mins = limitRetries[IO](10) |+| constantDelay[IO](1.minute)
+  val retry1mins = constantDelay[IO](1.minute)
 
   /**
-   * The program retry with a 100ms delay 5 times and then retry every minutes 10 times.
+   * The program retry with a 100ms delay 5 times and then retry every minutes.
    */
   def programWithAdvancedPolicy(input: Input): IO[Output] = {
     retryingOnAllErrors[Output](
-      policy = retry5times100millis.followedBy(retry10times1mins),
+      policy = retry5times100millis.followedBy(retry1mins),
       onError = logError("programWithAdvancedPolicy")
     )(execute(input))
   }
@@ -87,14 +87,14 @@ object RunRetryWithCatsRetry {
 
   def programWithRetryOnTuesday(input: Input): IO[Output] = {
     retryingOnSomeErrors[Output](
-      policy = onlyRetryOnTuesdays |+| limitRetries[IO](5),
+      policy = onlyRetryOnTuesdays.join(limitRetries[IO](5) |+| exponentialBackoff(1.millis)),
       isWorthRetrying = isWorthRetrying,
       onError = logError("programWithRetryOnTuesday")
     )(execute(input))
   }
 
   def main(args: Array[String]): Unit = {
-    import Common.{sampleInput, printOutput}
+    import Common.{ sampleInput, printOutput }
     printOutput(programWithExponentialBackOff(sampleInput))
     printOutput(programWithAdvancedPolicy(sampleInput))
     printOutput(programWithRetryWhenTimeout(sampleInput))

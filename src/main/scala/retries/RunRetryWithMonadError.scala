@@ -50,14 +50,14 @@ object RunRetryWithMonadError {
     }
   }
 
-  def programWithExponentialBackOff(input: Input): IO[Output] =
-    retryFunc[IO, Output]("programWithExponentialBackOff")(ExponentialBackOff(3, 1.second))(execute(input))
-
   def programWithConstantDelay(input: Input): IO[Output] =
     retryFunc[IO, Output]("programWithConstantDelay")(ConstantDelay(3, 1.second))(execute(input))
 
+  def programWithExponentialBackOff(input: Input): IO[Output] =
+    retryFunc[IO, Output]("programWithExponentialBackOff")(ExponentialBackOff(3, 1.second))(execute(input))
+
   def main(args: Array[String]): Unit = {
-    import Common.{sampleInput, printOutput}
+    import Common.{ sampleInput, printOutput }
     printOutput(programWithConstantDelay(sampleInput))
     printOutput(programWithExponentialBackOff(sampleInput))
   }

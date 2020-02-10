@@ -2,6 +2,7 @@ package errors
 
 import java.util.concurrent.Executors
 
+import cats.effect.IO
 import cats.{ Monad, MonadError }
 
 import scala.concurrent.{ ExecutionContext, Future }
@@ -27,6 +28,12 @@ object FetchApi {
     val result = Value("result")
     if (success) result
     else throw new Exception("fetch error")
+  }
+  def fetchIO(url: URL): IO[Value] = {
+    val success = true
+    val result = Value("result")
+    if (success) IO(result)
+    else IO.raiseError(new Exception("fetch error"))
   }
 
   /**
@@ -60,5 +67,8 @@ object FetchApi {
     implicit val ec = ExecutionContext.fromExecutorService(Executors.newFixedThreadPool(8))
     import cats.instances.future._
     fetch[Future](url)
+
+    // `IO` implementing the algebra of `MonadError`
+    fetch[IO](url)
   }
 }

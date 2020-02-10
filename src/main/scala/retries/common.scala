@@ -25,7 +25,7 @@ object Common {
   def printOutput(result: IO[Output]): Unit = {
     result.attempt.map {
       case Right(Output(v)) => println(v)
-      case Left(e) => println(e.getMessage)
+      case Left(e)          => println(e.getMessage)
     }.unsafeRunSync()
   }
 }

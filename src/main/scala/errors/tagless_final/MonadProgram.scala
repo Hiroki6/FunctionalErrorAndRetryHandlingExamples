@@ -5,8 +5,8 @@ import cats.effect.IO
 import errors.tagless_final.Common.{ EitherThrowable, Input, PreconditionException, Output }
 
 object MonadProgram extends App {
-  class UseCase[F[_]] {
-    def update(in: Input)(implicit M: Monad[F], repository: Repository[F]): F[Output] = {
+  class UseCase[F[_]](implicit M: Monad[F], repository: Repository[F]) {
+    def update(in: Input): F[Output] = {
       M.flatMap(repository.get(in)) {
         case Some(value) => repository.update(value)
         case None        => throw PreconditionException("Not Found")
