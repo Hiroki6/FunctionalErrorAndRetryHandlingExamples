@@ -1,4 +1,4 @@
-# SampleFunctionalErrorAndRetryHandling
+# FunctionalErrorAndRetryHandlingExamples
 Sample code for [this slides](https://speakerdeck.com/hiroki6/functional-error-and-retry-handling)
 
 ## errors
